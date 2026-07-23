@@ -1,0 +1,2 @@
+import { PolicyPage } from "@/features/shared/PolicyPage";
+export default function Page(){return <PolicyPage title="Accessibility" summary="Our commitment to making IAMimpact information and participation pathways usable by as many people as possible."><p>The website is designed toward WCAG 2.2 AA expectations, including keyboard access, visible focus states, semantic structure, reduced-motion support and readable contrast. Accessibility feedback channels will be published with the official contact information.</p></PolicyPage>}

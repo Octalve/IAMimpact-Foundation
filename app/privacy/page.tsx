@@ -1,0 +1,2 @@
+import { PolicyPage } from "@/features/shared/PolicyPage";
+export default function Page(){return <PolicyPage title="Privacy notice" summary="A plain-language explanation of how IAMimpact will collect, use, protect and retain personal information."><p>This starter does not submit or store form information. A complete Nigeria Data Protection Act-aligned notice must be reviewed before live data collection begins.</p></PolicyPage>}

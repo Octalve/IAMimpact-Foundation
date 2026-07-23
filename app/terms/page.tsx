@@ -1,0 +1,2 @@
+import { PolicyPage } from "@/features/shared/PolicyPage";
+export default function Page(){return <PolicyPage title="Website terms" summary="The rules governing responsible use of IAMimpact Foundation’s public website."><p>Formal website terms should be reviewed and approved before public launch. Nothing on this starter constitutes an active programme offer, grant, employment offer or guaranteed placement.</p></PolicyPage>}
