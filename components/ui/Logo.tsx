@@ -9,7 +9,7 @@ export function Logo({ light = false }: { light?: boolean }) {
       aria-label="IAMimpact Foundation home"
     >
       <Image
-        src="/brand/iamimpact-logo-cropped.png"
+        src="/brand/iamimpact-logo.png"
         alt=""
         fill
         sizes="198px"
