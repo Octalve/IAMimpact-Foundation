@@ -16,7 +16,7 @@ export function Hero() {
         <div className="flex justify-end">
           <button
             type="button"
-            className="flex items-center gap-2 rounded-full border border-white/30 bg-black/20 px-4 py-2 text-sm"
+            className="flex items-center gap-2 rounded-full border border-white/30 bg-black/20 px-4 py-2 text-sm text-white"
             aria-label="Play foundation story video"
           >
             <Play className="h-4 w-4" /> Our story
