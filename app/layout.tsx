@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
@@ -33,7 +33,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} antialiased`}>
+      <body suppressHydrationWarning className={`${geistSans.variable} antialiased`}>
         <a className="skip-link" href="#main-content">Skip to content</a>
         <Header />
         {children}
@@ -42,3 +42,4 @@ export default function RootLayout({
     </html>
   );
 }
+

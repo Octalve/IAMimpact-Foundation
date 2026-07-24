@@ -48,3 +48,6 @@ Desktop.ini
 *.zip
 *.rar
 *.7z
+
+# Local backup files
+*.backup
