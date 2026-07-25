@@ -67,3 +67,5 @@ Desktop.ini
 # Local backup files
 *.backup
 .dev.vars
+.vercel
+.env*
