@@ -1,29 +1,25 @@
-import { getRuntimeEnv } from "./runtime-env";
+import "server-only";
+import { Resend } from "resend";
+import { env } from "@/lib/env";
 
 type Mail = { to: string; subject: string; html: string; replyTo?: string };
 
 export async function sendMail(message: Mail) {
-  const env = await getRuntimeEnv();
-  const provider = env.MAIL_PROVIDER || "resend";
-  if (provider !== "resend" || !env.RESEND_API_KEY) {
-    console.info("Email delivery skipped: configure MAIL_PROVIDER and provider credentials.");
-    return { delivered: false };
-  }
-  const response = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: { Authorization: `Bearer ${env.RESEND_API_KEY}`, "Content-Type": "application/json" },
-    body: JSON.stringify({
-      from: env.MAIL_FROM || "IAMimpact Foundation <updates@example.org>",
-      to: [message.to],
-      subject: message.subject,
-      html: message.html,
-      reply_to: message.replyTo,
-    }),
+  if (!env.RESEND_API_KEY || !env.MAIL_FROM) return { delivered: false };
+
+  const resend = new Resend(env.RESEND_API_KEY);
+  const { error } = await resend.emails.send({
+    from: env.MAIL_FROM,
+    to: message.to,
+    subject: message.subject,
+    html: message.html,
+    replyTo: message.replyTo,
   });
-  return { delivered: response.ok };
+
+  if (error) throw new Error("Email delivery failed.");
+  return { delivered: true };
 }
 
-export async function adminRecipient() {
-  const env = await getRuntimeEnv();
+export function adminRecipient() {
   return env.ADMIN_NOTIFICATION_EMAIL || "";
 }

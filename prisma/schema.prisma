@@ -1,0 +1,46 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Submission {
+  id           String   @id @default(uuid())
+  kind         String
+  fullName     String
+  email        String
+  phone        String?
+  organisation String?
+  payload      Json
+  status       String   @default("new")
+  createdAt    DateTime @default(now())
+
+  @@index([kind])
+  @@index([createdAt])
+}
+
+model EventRegistration {
+  id                 String   @id @default(uuid())
+  eventSlug          String
+  registrationCode   String   @unique
+  fullName           String
+  email              String
+  phone              String?
+  organisation       String?
+  accessibilityNeeds String?
+  consent            Boolean
+  createdAt          DateTime @default(now())
+
+  @@unique([eventSlug, email])
+  @@index([eventSlug])
+  @@index([email])
+}
+
+model RateLimit {
+  key             String   @id
+  count           Int
+  windowStartedAt DateTime
+}
