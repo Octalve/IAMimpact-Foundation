@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { PageHero } from "@/features/shared/PageHero";
+import { TeamSections } from "@/features/who-we-are/TeamSections";
 
 export const metadata: Metadata = {
   title: "Who We Are",
@@ -112,6 +113,8 @@ export default function WhoWeArePage() {
           </div>
         </div>
       </section>
+
+      <TeamSections />
     </main>
   );
 }
