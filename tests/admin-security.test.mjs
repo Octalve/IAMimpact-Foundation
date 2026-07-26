@@ -42,6 +42,17 @@ test("admin login exposes a secure Neon Auth password-reset flow", async () => {
   assert.match(resetPage, /searchParams/);
 });
 
+test("password recovery pages remain reachable without an admin session", async () => {
+  const proxy = await read("proxy.ts");
+
+  assert.doesNotMatch(proxy, /"\/admin\/:path\*"/);
+  assert.match(proxy, /"\/admin"/);
+  assert.match(proxy, /"\/admin\/registrations\/:path\*"/);
+  assert.match(proxy, /"\/admin\/check-in\/:path\*"/);
+  assert.match(proxy, /"\/admin\/staff\/:path\*"/);
+  assert.match(proxy, /"\/admin\/audit\/:path\*"/);
+});
+
 test("check-in is concurrency-safe and audited", async () => {
   const actions = await read("app/admin/(protected)/actions.ts");
   assert.match(actions, /updateMany/);
