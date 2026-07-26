@@ -31,6 +31,14 @@ pnpm build
 - `/get-involved`
 - `/contact`
 - `/search`
+- `/admin/login` (invite-only staff)
+
+## Administration
+
+The secure event administration package uses Neon Auth for authentication and
+an IAMimpact-owned role table for authorization. See
+[`docs/ADMIN_DASHBOARD.md`](docs/ADMIN_DASHBOARD.md) for setup, permissions and
+deployment instructions.
 
 ## Editing the website
 

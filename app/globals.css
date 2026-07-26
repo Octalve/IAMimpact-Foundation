@@ -82,6 +82,15 @@ button, a { -webkit-tap-highlight-color: transparent; }
   font-weight: 700;
 }
 .body-copy { color: #5b6670; line-height: 1.75; }
+.admin-nav-link {
+  white-space: nowrap;
+  border-radius: .75rem;
+  padding: .65rem .9rem;
+  color: #475569;
+  font-size: .875rem;
+  font-weight: 800;
+}
+.admin-nav-link:hover { background: #eff6ff; color: var(--brand-deep-blue); }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition: none !important; animation: none !important; }

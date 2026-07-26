@@ -18,6 +18,9 @@ const serverEnvSchema = z.object({
   MAIL_FROM: z.string().trim().min(1).optional(),
   ADMIN_NOTIFICATION_EMAIL: z.string().trim().email().optional(),
   TURNSTILE_SECRET_KEY: z.string().trim().min(1).optional(),
+  NEON_AUTH_BASE_URL: z.string().trim().url().optional(),
+  NEON_AUTH_COOKIE_SECRET: z.string().trim().min(32).optional(),
+  ADMIN_BOOTSTRAP_EMAIL: z.string().trim().email().optional(),
   NODE_ENV: z
     .enum(["development", "test", "production"])
     .default("development"),

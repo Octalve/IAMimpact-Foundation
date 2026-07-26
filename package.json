@@ -21,6 +21,7 @@
     "vercel-build": "prisma generate && prisma migrate deploy && next build"
   },
   "dependencies": {
+    "@neondatabase/auth": "0.4.2-beta",
     "@prisma/client": "6.19.0",
     "html-to-image": "^1.11.13",
     "jspdf": "^4.2.1",

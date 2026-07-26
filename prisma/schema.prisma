@@ -33,11 +33,57 @@ model EventRegistration {
   organisation       String?
   accessibilityNeeds String?
   consent            Boolean
+  status             RegistrationStatus @default(CONFIRMED)
+  checkedInAt        DateTime?
+  checkedInBy        String?
   createdAt          DateTime @default(now())
 
   @@unique([eventSlug, email])
   @@index([eventSlug])
   @@index([email])
+  @@index([status])
+  @@index([checkedInAt])
+}
+
+enum RegistrationStatus {
+  CONFIRMED
+  CANCELLED
+}
+
+enum StaffRole {
+  SUPER_ADMIN
+  ADMIN
+  CHECK_IN_STAFF
+  VIEWER
+}
+
+model StaffAccount {
+  id         String    @id @default(uuid())
+  authUserId String?   @unique
+  email      String    @unique
+  name       String?
+  role       StaffRole @default(VIEWER)
+  active     Boolean   @default(true)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  @@index([role])
+  @@index([active])
+}
+
+model AuditLog {
+  id          String   @id @default(uuid())
+  actorUserId String
+  actorEmail  String
+  action      String
+  targetType  String
+  targetId    String?
+  metadata    Json?
+  createdAt   DateTime @default(now())
+
+  @@index([actorUserId])
+  @@index([action])
+  @@index([createdAt])
 }
 
 model RateLimit {
@@ -45,4 +91,3 @@ model RateLimit {
   count           Int
   windowStartedAt DateTime
 }
-
