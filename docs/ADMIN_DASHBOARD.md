@@ -50,6 +50,14 @@ $bytes = New-Object byte[] 48
 
 There is no public staff sign-up route.
 
+## Password reset
+
+Administrators can use **Forgot password?** on `/admin/login`. Neon Auth sends
+a time-limited link to `/admin/reset-password`; the application never receives
+or stores the old password. Add both the production origin and any preview
+origin used for testing to Neon Auth's trusted domains so reset redirects are
+accepted.
+
 ## Adding another staff member
 
 1. A super administrator creates the user in Neon Auth.

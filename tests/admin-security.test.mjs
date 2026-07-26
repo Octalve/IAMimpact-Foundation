@@ -26,6 +26,22 @@ test("admin package contains no public sign-up flow", async () => {
   assert.doesNotMatch(client, /allowAnonymous/);
 });
 
+test("admin login exposes a secure Neon Auth password-reset flow", async () => {
+  const [login, forgot, reset, resetPage] = await Promise.all([
+    read("features/admin/LoginForm.tsx"),
+    read("features/admin/ForgotPasswordForm.tsx"),
+    read("features/admin/ResetPasswordForm.tsx"),
+    read("app/admin/reset-password/page.tsx"),
+  ]);
+
+  assert.match(login, /\/admin\/forgot-password/);
+  assert.match(forgot, /authClient\.requestPasswordReset/);
+  assert.match(forgot, /\/admin\/reset-password/);
+  assert.match(forgot, /If that email belongs to an account/);
+  assert.match(reset, /authClient\.resetPassword/);
+  assert.match(resetPage, /searchParams/);
+});
+
 test("check-in is concurrency-safe and audited", async () => {
   const actions = await read("app/admin/(protected)/actions.ts");
   assert.match(actions, /updateMany/);
