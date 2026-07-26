@@ -24,22 +24,7 @@ const menuGroups: MenuGroup[] = [
     href: "/who-we-are",
     items: [
       { label: "About IAMimpact", href: "/who-we-are" },
-      { label: "Our Story", href: "/who-we-are#our-story" },
-      { label: "Mission, Vision & Values", href: "/who-we-are#mission-vision-values" },
       { label: "Leadership & Team", href: "/who-we-are#leadership" },
-      { label: "Our Partners", href: "/who-we-are#partners" },
-    ],
-  },
-  {
-    label: "What We Do",
-    href: "/what-we-do",
-    items: [
-      { label: "What We Do", href: "/what-we-do" },
-      { label: "Education & Future Readiness", href: "/what-we-do#education" },
-      { label: "Digital Inclusion & Innovation", href: "/what-we-do#digital-inclusion" },
-      { label: "Climate & Sustainable Communities", href: "/what-we-do#climate" },
-      { label: "Leadership & Contextual Intelligence", href: "/what-we-do#leadership" },
-      { label: "Community Development & Service", href: "/what-we-do#community-development" },
     ],
   },
   {
@@ -49,23 +34,30 @@ const menuGroups: MenuGroup[] = [
     items: [
       {
         label: "IAM Future Schools",
-        href: "/programmes#iam-future-schools",
-        description: "Preparing young people for learning, work and the future.",
+        href: "/programmes/future-schools",
+        description:
+          "Preparing young people for learning, work and the future.",
       },
       {
         label: "IAM Digital",
-        href: "/programmes#iam-digital",
-        description: "Expanding access to useful digital skills and innovation.",
+        href: "/programmes/iam-digital",
+        description:
+          "Expanding access to useful digital skills and innovation.",
       },
       {
         label: "IAM Contextual Intelligence",
-        href: "/programmes#iam-contextual-intelligence",
-        description: "Building thoughtful leaders who understand their communities.",
+        href: "/programmes/contextual-intelligence",
+        description:
+          "Building thoughtful leaders who understand their communities.",
       },
-      { label: "All Programmes", href: "/programmes" },
-      { label: "Upcoming Programmes", href: "/programmes#upcoming" },
-      { label: "Programme Locations", href: "/programmes#locations" },
-      { label: "Propose a Programme", href: "/get-involved#propose-a-programme" },
+      {
+        label: "All Programmes",
+        href: "/programmes",
+      },
+      {
+        label: "Upcoming Programmes",
+        href: "/events",
+      },
     ],
   },
   {
@@ -73,8 +65,6 @@ const menuGroups: MenuGroup[] = [
     href: "/our-impact",
     items: [
       { label: "Our Impact", href: "/our-impact" },
-      { label: "Stories of Impact", href: "/our-impact#stories" },
-      { label: "Reports & Publications", href: "/our-impact#reports" },
       { label: "Insights & News", href: "/insights" },
       { label: "Events", href: "/events" },
     ],
@@ -85,10 +75,9 @@ const menuGroups: MenuGroup[] = [
     items: [
       { label: "Get Involved", href: "/get-involved" },
       { label: "Become a Volunteer", href: "/get-involved/volunteer" },
-      { label: "Partner With Us", href: "/get-involved/partner" },
-      { label: "Sponsor a Programme", href: "/get-involved/sponsor" },
-      { label: "Donate", href: "/get-involved/donate" },
-      { label: "Careers", href: "/get-involved/careers" },
+      { label: "Partner With Us", href: "/get-involved/partnership" },
+      { label: "Sponsor a Programme", href: "/contact" },
+      { label: "Careers", href: "/contact" },
     ],
   },
 ];
@@ -136,39 +125,110 @@ export function Header() {
       ref={headerRef}
       className="sticky top-0 z-50 border-b border-black/5 bg-white/95 backdrop-blur"
     >
-      <div className="container-shell flex min-h-20 items-center justify-between gap-4">
-        <Logo />
+      <div className="container-shell flex min-h-20 items-center justify-between gap-3">
+        <div className="shrink-0">
+          <Logo />
+        </div>
 
         <nav
-          className="hidden items-center gap-1 lg:flex"
+          className="hidden min-w-0 items-center justify-center gap-0.5 xl:flex"
           aria-label="Main navigation"
         >
-          {menuGroups.map((group) => {
+          <Link
+            href="/"
+            className="shrink-0 whitespace-nowrap rounded-full px-2.5 py-3 text-sm font-semibold text-slate-700 transition hover:text-[var(--brand-blue)] 2xl:px-3"
+          >
+            Home
+          </Link>
+
+          {menuGroups.slice(0, 1).map((group) => {
             const isOpen = desktopOpen === group.label;
 
             return (
               <div
                 key={group.label}
-                className="relative"
+                className="relative shrink-0"
                 onMouseEnter={() => setDesktopOpen(group.label)}
                 onMouseLeave={() => setDesktopOpen(null)}
               >
                 <div className="flex items-center">
                   <Link
                     href={group.href}
-                    className="rounded-l-full py-3 pl-3 text-sm font-semibold text-slate-700 transition hover:text-[var(--brand-blue)]"
+                    className="whitespace-nowrap rounded-l-full py-3 pl-2.5 text-sm font-semibold text-slate-700 transition hover:text-[var(--brand-blue)] 2xl:pl-3"
                     onFocus={() => setDesktopOpen(group.label)}
                   >
                     {group.label}
                   </Link>
+
                   <button
                     type="button"
-                    className="rounded-r-full py-3 pl-1 pr-2 text-slate-500 transition hover:text-[var(--brand-blue)]"
+                    className="rounded-r-full py-3 pl-1 pr-1.5 text-slate-500 transition hover:text-[var(--brand-blue)] 2xl:pr-2"
                     aria-label={`Open ${group.label} menu`}
                     aria-expanded={isOpen}
-                    onClick={() =>
-                      setDesktopOpen(isOpen ? null : group.label)
-                    }
+                    onClick={() => setDesktopOpen(isOpen ? null : group.label)}
+                  >
+                    <ChevronDown
+                      className={`h-4 w-4 transition-transform ${
+                        isOpen ? "rotate-180" : ""
+                      }`}
+                    />
+                  </button>
+                </div>
+
+                {isOpen && (
+                  <div className="absolute left-0 top-full w-72 pt-3">
+                    <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white p-3 shadow-2xl shadow-slate-900/10">
+                      <div className="grid gap-1">
+                        {group.items.map((item) => (
+                          <Link
+                            key={`${item.label}-${item.href}`}
+                            href={item.href}
+                            onClick={() => setDesktopOpen(null)}
+                            className="rounded-xl px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 hover:text-[var(--brand-blue)]"
+                          >
+                            {item.label}
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+
+          <Link
+            href="/what-we-do"
+            className="shrink-0 whitespace-nowrap rounded-full px-2.5 py-3 text-sm font-semibold text-slate-700 transition hover:text-[var(--brand-blue)] 2xl:px-3"
+          >
+            What We Do
+          </Link>
+
+          {menuGroups.slice(1).map((group) => {
+            const isOpen = desktopOpen === group.label;
+
+            return (
+              <div
+                key={group.label}
+                className="relative shrink-0"
+                onMouseEnter={() => setDesktopOpen(group.label)}
+                onMouseLeave={() => setDesktopOpen(null)}
+              >
+                <div className="flex items-center">
+                  <Link
+                    href={group.href}
+                    className="whitespace-nowrap rounded-l-full py-3 pl-2.5 text-sm font-semibold text-slate-700 transition hover:text-[var(--brand-blue)] 2xl:pl-3"
+                    onFocus={() => setDesktopOpen(group.label)}
+                  >
+                    {group.label}
+                  </Link>
+
+                  <button
+                    type="button"
+                    className="rounded-r-full py-3 pl-1 pr-1.5 text-slate-500 transition hover:text-[var(--brand-blue)] 2xl:pr-2"
+                    aria-label={`Open ${group.label} menu`}
+                    aria-expanded={isOpen}
+                    onClick={() => setDesktopOpen(isOpen ? null : group.label)}
                   >
                     <ChevronDown
                       className={`h-4 w-4 transition-transform ${
@@ -183,7 +243,9 @@ export function Header() {
                     className={
                       group.featured
                         ? "absolute left-1/2 top-full w-[min(760px,90vw)] -translate-x-1/2 pt-3"
-                        : "absolute left-0 top-full w-72 pt-3"
+                        : group.label === "Get Involved"
+                          ? "absolute right-0 top-full w-72 pt-3"
+                          : "absolute left-0 top-full w-72 pt-3"
                     }
                   >
                     <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white p-3 shadow-2xl shadow-slate-900/10">
@@ -193,10 +255,11 @@ export function Header() {
                             <p className="text-xs font-bold uppercase tracking-[0.18em] text-white/70">
                               Featured programmes
                             </p>
+
                             <div className="mt-3 grid gap-1">
                               {group.items.slice(0, 3).map((item) => (
                                 <Link
-                                  key={item.href}
+                                  key={`${item.label}-${item.href}`}
                                   href={item.href}
                                   onClick={() => setDesktopOpen(null)}
                                   className="rounded-xl p-3 transition hover:bg-white/10"
@@ -204,21 +267,26 @@ export function Header() {
                                   <span className="block font-bold">
                                     {item.label}
                                   </span>
-                                  <span className="mt-1 block text-xs leading-5 text-white/75">
-                                    {item.description}
-                                  </span>
+
+                                  {item.description && (
+                                    <span className="mt-1 block text-xs leading-5 text-white/75">
+                                      {item.description}
+                                    </span>
+                                  )}
                                 </Link>
                               ))}
                             </div>
                           </div>
+
                           <div className="p-2">
                             <p className="px-3 pt-2 text-xs font-bold uppercase tracking-[0.18em] text-slate-400">
                               Explore
                             </p>
+
                             <div className="mt-2 grid gap-1">
                               {group.items.slice(3).map((item) => (
                                 <Link
-                                  key={item.href}
+                                  key={`${item.label}-${item.href}`}
                                   href={item.href}
                                   onClick={() => setDesktopOpen(null)}
                                   className="rounded-xl px-3 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 hover:text-[var(--brand-blue)]"
@@ -233,7 +301,7 @@ export function Header() {
                         <div className="grid gap-1">
                           {group.items.map((item) => (
                             <Link
-                              key={item.href}
+                              key={`${item.label}-${item.href}`}
                               href={item.href}
                               onClick={() => setDesktopOpen(null)}
                               className="rounded-xl px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 hover:text-[var(--brand-blue)]"
@@ -252,23 +320,24 @@ export function Header() {
 
           <Link
             href="/contact"
-            className="rounded-full px-3 py-3 text-sm font-semibold text-slate-700 transition hover:text-[var(--brand-blue)]"
+            className="shrink-0 whitespace-nowrap rounded-full px-2.5 py-3 text-sm font-semibold text-slate-700 transition hover:text-[var(--brand-blue)] 2xl:px-3"
           >
             Contact
           </Link>
         </nav>
 
-        <div className="hidden items-center gap-2 lg:flex">
+        <div className="hidden shrink-0 items-center gap-1.5 xl:flex 2xl:gap-2">
           <Link
             href="/search"
             aria-label="Search"
-            className="rounded-full p-3 hover:bg-slate-100"
+            className="rounded-full p-2.5 transition hover:bg-slate-100"
           >
             <Search className="h-5 w-5" />
           </Link>
+
           <Link
             href="/get-involved"
-            className="rounded-full bg-[var(--brand-red)] px-5 py-3 text-sm font-bold text-white hover:bg-[#c90b14]"
+            className="whitespace-nowrap rounded-full bg-[var(--brand-red)] px-4 py-3 text-sm font-bold text-white transition hover:bg-[#c90b14] 2xl:px-5"
           >
             Join IAMimpact
           </Link>
@@ -276,20 +345,26 @@ export function Header() {
 
         <button
           type="button"
-          className="rounded-full p-3 lg:hidden"
+          className="shrink-0 rounded-full p-3 xl:hidden"
           onClick={() => setMobileOpen((current) => !current)}
           aria-expanded={mobileOpen}
           aria-controls="mobile-menu"
-          aria-label="Toggle menu"
+          aria-label={
+            mobileOpen ? "Close navigation menu" : "Open navigation menu"
+          }
         >
-          {mobileOpen ? <X /> : <Menu />}
+          {mobileOpen ? (
+            <X className="h-6 w-6" />
+          ) : (
+            <Menu className="h-6 w-6" />
+          )}
         </button>
       </div>
 
       {mobileOpen && (
         <nav
           id="mobile-menu"
-          className="max-h-[calc(100vh-5rem)] overflow-y-auto border-t border-slate-200 bg-white px-4 py-5 lg:hidden"
+          className="max-h-[calc(100vh-5rem)] overflow-y-auto border-t border-slate-200 bg-white px-4 py-5 xl:hidden"
           aria-label="Mobile navigation"
         >
           <div className="container-shell grid gap-1">
@@ -301,7 +376,7 @@ export function Header() {
               Home
             </Link>
 
-            {menuGroups.map((group) => {
+            {menuGroups.slice(0, 1).map((group) => {
               const isOpen = mobileSection === group.label;
 
               return (
@@ -314,10 +389,13 @@ export function Header() {
                     >
                       {group.label}
                     </Link>
+
                     <button
                       type="button"
                       className="p-3"
-                      aria-label={`Open ${group.label} menu`}
+                      aria-label={`${isOpen ? "Close" : "Open"} ${
+                        group.label
+                      } menu`}
                       aria-expanded={isOpen}
                       onClick={() =>
                         setMobileSection(isOpen ? null : group.label)
@@ -335,7 +413,66 @@ export function Header() {
                     <div className="ml-4 grid gap-1 border-l border-slate-200 py-2 pl-3">
                       {group.items.map((item) => (
                         <Link
-                          key={item.href}
+                          key={`${item.label}-${item.href}`}
+                          href={item.href}
+                          onClick={closeMobileMenu}
+                          className="rounded-xl px-4 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-[var(--brand-blue)]"
+                        >
+                          {item.label}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+
+            <Link
+              href="/what-we-do"
+              onClick={closeMobileMenu}
+              className="rounded-xl px-4 py-3 font-semibold hover:bg-slate-50"
+            >
+              What We Do
+            </Link>
+
+            {menuGroups.slice(1).map((group) => {
+              const isOpen = mobileSection === group.label;
+
+              return (
+                <div key={group.label}>
+                  <div className="flex items-center rounded-xl hover:bg-slate-50">
+                    <Link
+                      href={group.href}
+                      onClick={closeMobileMenu}
+                      className="min-w-0 flex-1 px-4 py-3 font-semibold"
+                    >
+                      {group.label}
+                    </Link>
+
+                    <button
+                      type="button"
+                      className="p-3"
+                      aria-label={`${isOpen ? "Close" : "Open"} ${
+                        group.label
+                      } menu`}
+                      aria-expanded={isOpen}
+                      onClick={() =>
+                        setMobileSection(isOpen ? null : group.label)
+                      }
+                    >
+                      <ChevronDown
+                        className={`h-5 w-5 transition-transform ${
+                          isOpen ? "rotate-180" : ""
+                        }`}
+                      />
+                    </button>
+                  </div>
+
+                  {isOpen && (
+                    <div className="ml-4 grid gap-1 border-l border-slate-200 py-2 pl-3">
+                      {group.items.map((item) => (
+                        <Link
+                          key={`${item.label}-${item.href}`}
                           href={item.href}
                           onClick={closeMobileMenu}
                           className="rounded-xl px-4 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-[var(--brand-blue)]"
@@ -356,6 +493,7 @@ export function Header() {
             >
               Contact
             </Link>
+
             <Link
               href="/search"
               onClick={closeMobileMenu}
@@ -364,6 +502,7 @@ export function Header() {
               <Search className="h-5 w-5" />
               Search
             </Link>
+
             <Link
               href="/get-involved"
               onClick={closeMobileMenu}
