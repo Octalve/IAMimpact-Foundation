@@ -16,20 +16,25 @@ export function LoginForm() {
     setPending(true);
     setError("");
 
-    const data = new FormData(event.currentTarget);
-    const result = await authClient.signIn.email({
-      email: String(data.get("email") || "").trim(),
-      password: String(data.get("password") || ""),
-    });
+    try {
+      const data = new FormData(event.currentTarget);
+      const result = await authClient.signIn.email({
+        email: String(data.get("email") || "").trim(),
+        password: String(data.get("password") || ""),
+      });
 
-    if (result.error) {
-      setError("Sign-in failed. Check your details or contact the super administrator.");
+      if (result.error) {
+        setError("Sign-in failed. Check your email and password.");
+        return;
+      }
+
+      router.replace("/admin");
+      router.refresh();
+    } catch {
+      setError("The sign-in service is temporarily unavailable. Please try again.");
+    } finally {
       setPending(false);
-      return;
     }
-
-    router.replace("/admin");
-    router.refresh();
   }
 
   return (

@@ -10,6 +10,5 @@ export const config = {
     "/admin/staff/:path*",
     "/admin/audit/:path*",
     "/api/admin/:path*",
-    "/api/auth/:path*",
   ],
 };
