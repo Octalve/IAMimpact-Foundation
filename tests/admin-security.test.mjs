@@ -53,6 +53,13 @@ test("password recovery pages remain reachable without an admin session", async 
   assert.match(proxy, /"\/admin\/audit\/:path\*"/);
 });
 
+test("Neon Auth API remains public so login requests reach the auth handler", async () => {
+  const proxy = await read("proxy.ts");
+
+  assert.doesNotMatch(proxy, /"\/api\/auth\/:path\*"/);
+  assert.match(proxy, /"\/api\/admin\/:path\*"/);
+});
+
 test("check-in is concurrency-safe and audited", async () => {
   const actions = await read("app/admin/(protected)/actions.ts");
   assert.match(actions, /updateMany/);
