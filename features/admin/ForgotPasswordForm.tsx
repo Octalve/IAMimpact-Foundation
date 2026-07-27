@@ -32,10 +32,17 @@ export function ForgotPasswordForm() {
   if (sent) {
     return (
       <div className="mt-8 space-y-5">
-        <p role="status" className="rounded-xl bg-emerald-50 p-4 text-sm font-semibold leading-6 text-emerald-900">
-          If that email belongs to an account, password-reset instructions have been sent. Check the inbox and spam folder.
+        <p
+          role="status"
+          className="rounded-xl bg-emerald-50 p-4 text-sm font-semibold leading-6 text-emerald-900"
+        >
+          If that email belongs to an account, password-reset instructions have
+          been sent. Check the inbox and spam folder.
         </p>
-        <Link href="/admin/login" className="block text-center font-bold text-[var(--brand-deep-blue)] hover:underline">
+        <Link
+          href="/admin/login"
+          className="block text-center font-bold text-[var(--brand-deep-blue)] hover:underline"
+        >
           Return to sign in
         </Link>
       </div>
@@ -55,16 +62,27 @@ export function ForgotPasswordForm() {
           className="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3"
         />
       </label>
-      {error ? <p role="alert" className="text-sm font-semibold text-red-700">{error}</p> : null}
+      {error ? (
+        <p role="alert" className="text-sm font-semibold text-red-700">
+          {error}
+        </p>
+      ) : null}
       <button
         type="submit"
         disabled={pending}
         className="flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--brand-deep-blue)] px-5 py-3.5 font-black text-white disabled:opacity-60"
       >
-        {pending ? <LoaderCircle className="h-5 w-5 animate-spin" /> : <Mail className="h-5 w-5" />}
+        {pending ? (
+          <LoaderCircle className="h-5 w-5 animate-spin" />
+        ) : (
+          <Mail className="h-5 w-5" />
+        )}
         {pending ? "Sending…" : "Send reset email"}
       </button>
-      <Link href="/admin/login" className="block text-center font-bold text-[var(--brand-deep-blue)] hover:underline">
+      <Link
+        href="/admin/login"
+        className="block text-center font-bold text-[var(--brand-deep-blue)] hover:underline"
+      >
         Return to sign in
       </Link>
     </form>

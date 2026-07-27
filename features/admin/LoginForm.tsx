@@ -31,7 +31,9 @@ export function LoginForm() {
       router.replace("/admin");
       router.refresh();
     } catch {
-      setError("The sign-in service is temporarily unavailable. Please try again.");
+      setError(
+        "The sign-in service is temporarily unavailable. Please try again.",
+      );
     } finally {
       setPending(false);
     }
@@ -69,13 +71,21 @@ export function LoginForm() {
           className="mt-2 w-full rounded-xl border border-slate-300 px-4 py-3"
         />
       </label>
-      {error ? <p role="alert" className="text-sm font-semibold text-red-700">{error}</p> : null}
+      {error ? (
+        <p role="alert" className="text-sm font-semibold text-red-700">
+          {error}
+        </p>
+      ) : null}
       <button
         type="submit"
         disabled={pending}
         className="flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--brand-deep-blue)] px-5 py-3.5 font-black text-white disabled:opacity-60"
       >
-        {pending ? <LoaderCircle className="h-5 w-5 animate-spin" /> : <LockKeyhole className="h-5 w-5" />}
+        {pending ? (
+          <LoaderCircle className="h-5 w-5 animate-spin" />
+        ) : (
+          <LockKeyhole className="h-5 w-5" />
+        )}
         {pending ? "Signing in…" : "Secure sign in"}
       </button>
     </form>

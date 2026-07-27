@@ -23,10 +23,9 @@ export default async function RegistrationPass({ params }: PageProps) {
     registrationCode = "";
   }
 
-  const validShape =
-    /^IAM-[A-F0-9]{4}-[A-F0-9]{4}-[A-F0-9]{4}$/.test(
-      registrationCode,
-    );
+  const validShape = /^IAM-[A-F0-9]{4}-[A-F0-9]{4}-[A-F0-9]{4}$/.test(
+    registrationCode,
+  );
 
   const prisma = getPrisma();
 
@@ -60,8 +59,8 @@ export default async function RegistrationPass({ params }: PageProps) {
             </h1>
 
             <p className="mt-6 text-slate-600">
-              We could not verify this registration pass. Please check the
-              link or contact IAMimpact Foundation for assistance.
+              We could not verify this registration pass. Please check the link
+              or contact IAMimpact Foundation for assistance.
             </p>
 
             <Link
