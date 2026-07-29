@@ -1,5 +1,5 @@
 import "server-only";
-import type { StaffAccount, StaffRole } from "@prisma/client";
+import { Prisma, type StaffAccount, type StaffRole } from "@prisma/client";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth/server";
 import { getPrisma } from "@/lib/prisma";
@@ -35,6 +35,31 @@ export function can(role: StaffRole, permission: Permission) {
   return (ROLE_PERMISSIONS[permission] as readonly StaffRole[]).includes(role);
 }
 
+async function linkAuthorizedStaff(
+  staff: StaffAccount,
+  user: { id: string; name?: string | null },
+): Promise<AuthorizedStaff | null> {
+  if (!staff.active) return null;
+  if (staff.authUserId) {
+    return staff.authUserId === user.id ? (staff as AuthorizedStaff) : null;
+  }
+
+  const prisma = getPrisma();
+  if (!prisma) throw new Error("Database configuration is unavailable.");
+
+  // Claim an unlinked invitation only once. The conditional update prevents two
+  // different authenticated users from racing to bind the same email address.
+  await prisma.staffAccount.updateMany({
+    where: { id: staff.id, authUserId: null, active: true },
+    data: { authUserId: user.id, name: user.name || staff.name },
+  });
+
+  const linked = await prisma.staffAccount.findUnique({ where: { id: staff.id } });
+
+  if (!linked?.active || linked.authUserId !== user.id) return null;
+  return linked as AuthorizedStaff;
+}
+
 export async function currentStaff(): Promise<AuthorizedStaff | null> {
   const prisma = getPrisma();
   if (!prisma) throw new Error("Database configuration is unavailable.");
@@ -48,35 +73,57 @@ export async function currentStaff(): Promise<AuthorizedStaff | null> {
     ? normalizeEmail(process.env.ADMIN_BOOTSTRAP_EMAIL)
     : null;
 
+  // Once an identity has been linked, its immutable provider ID is authoritative.
+  // Still require the authorized email to match so an identity email change does
+  // not silently inherit access intended for another address.
+  const identityStaff = await prisma.staffAccount.findUnique({
+    where: { authUserId: user.id },
+  });
+  if (identityStaff) {
+    if (identityStaff.email !== email) return null;
+    return linkAuthorizedStaff(identityStaff, user);
+  }
+
+  const emailStaff = await prisma.staffAccount.findUnique({ where: { email } });
+
   if (bootstrapEmail && email === bootstrapEmail) {
-    const staff = await prisma.staffAccount.upsert({
-      where: { email },
-      create: {
-        authUserId: user.id,
-        email,
-        name: user.name || null,
-        role: "SUPER_ADMIN",
-      },
-      update: {
-        authUserId: user.id,
-        name: user.name || undefined,
-      },
-    });
-    return staff as AuthorizedStaff;
+    // Bootstrap may create the initial account, but it must never reactivate,
+    // promote, or rebind an account that has subsequently been managed.
+    if (emailStaff) {
+      if (emailStaff.role !== "SUPER_ADMIN") return null;
+      return linkAuthorizedStaff(emailStaff, user);
+    }
+
+    try {
+      const staff = await prisma.staffAccount.create({
+        data: {
+          authUserId: user.id,
+          email,
+          name: user.name || null,
+          role: "SUPER_ADMIN",
+        },
+      });
+      return staff as AuthorizedStaff;
+    } catch (error) {
+      if (
+        !(error instanceof Prisma.PrismaClientKnownRequestError) ||
+        error.code !== "P2002"
+      ) {
+        throw error;
+      }
+
+      // A concurrent request may have created the bootstrap row. Resolve it
+      // through the same immutable binding checks instead of overwriting it.
+      const concurrentStaff = await prisma.staffAccount.findUnique({
+        where: { email },
+      });
+      if (!concurrentStaff || concurrentStaff.role !== "SUPER_ADMIN") return null;
+      return linkAuthorizedStaff(concurrentStaff, user);
+    }
   }
 
-  const staff = await prisma.staffAccount.findUnique({ where: { email } });
-  if (!staff?.active) return null;
-
-  if (staff.authUserId && staff.authUserId !== user.id) return null;
-  if (!staff.authUserId) {
-    return (await prisma.staffAccount.update({
-      where: { id: staff.id },
-      data: { authUserId: user.id, name: user.name || staff.name },
-    })) as AuthorizedStaff;
-  }
-
-  return staff as AuthorizedStaff;
+  if (!emailStaff) return null;
+  return linkAuthorizedStaff(emailStaff, user);
 }
 
 export async function requireStaff(permission: Permission = "viewRegistrations") {

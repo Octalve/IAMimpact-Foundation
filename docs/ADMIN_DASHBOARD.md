@@ -49,6 +49,10 @@ $bytes = New-Object byte[] 48
 5. The matching account is safely linked as `SUPER_ADMIN` on first sign-in.
 
 There is no public staff sign-up route.
+The bootstrap setting only creates the initial record. It cannot overwrite an
+existing identity link, reactivate a deactivated account, or promote a managed
+staff record. After another super administrator has been added and verified,
+remove `ADMIN_BOOTSTRAP_EMAIL` from the deployment environment.
 
 ## Password reset
 
