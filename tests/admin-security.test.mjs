@@ -17,6 +17,26 @@ test("admin routes use Neon Auth and IAMimpact authorization", async () => {
   assert.match(authorization, /ROLE_PERMISSIONS/);
 });
 
+test("staff identity links are immutable and claimed atomically", async () => {
+  const authorization = await read("lib/auth/authorization.ts");
+
+  assert.match(authorization, /where: \{ authUserId: user\.id \}/);
+  assert.match(authorization, /updateMany/);
+  assert.match(authorization, /authUserId: null/);
+  assert.doesNotMatch(authorization, /staffAccount\.upsert/);
+  assert.doesNotMatch(
+    authorization,
+    /update:\s*\{[\s\S]*?authUserId:\s*user\.id[\s\S]*?\}/,
+  );
+});
+
+test("bootstrap access cannot reactivate or promote a managed staff account", async () => {
+  const authorization = await read("lib/auth/authorization.ts");
+
+  assert.match(authorization, /emailStaff\.role !== "SUPER_ADMIN"/);
+  assert.match(authorization, /if \(!staff\.active\) return null/);
+});
+
 test("admin package contains no public sign-up flow", async () => {
   const [login, client] = await Promise.all([
     read("features/admin/LoginForm.tsx"),
