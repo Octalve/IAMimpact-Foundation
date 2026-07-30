@@ -38,7 +38,7 @@ export function AdminMobileNav({
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 lg:hidden">
+    <div className="fixed inset-x-0 bottom-0 top-20 z-40 lg:hidden">
       <button
         type="button"
         aria-label="Close admin navigation"
