@@ -1,31 +1,34 @@
-import Link from "next/link";
 import { ROLE_LABELS, can, requireStaff } from "@/lib/auth/authorization";
-import { SignOutButton } from "@/features/admin/SignOutButton";
+import { AdminShell } from "@/features/admin/AdminShell";
+import {
+  adminNavigation,
+  type AdminNavigationItem,
+} from "@/features/admin/admin-navigation";
 
 export const dynamic = "force-dynamic";
 
-export default async function AdminLayout({ children }: { children: React.ReactNode }) {
+export default async function AdminLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const staff = await requireStaff();
 
+  const navigation: AdminNavigationItem[] = [
+    adminNavigation.overview,
+    adminNavigation.registrations,
+    ...(can(staff.role, "checkIn") ? [adminNavigation.checkIn] : []),
+    ...(can(staff.role, "manageStaff") ? [adminNavigation.staff] : []),
+    ...(can(staff.role, "viewAudit") ? [adminNavigation.audit] : []),
+  ];
+
   return (
-    <main id="main-content" className="min-h-screen bg-slate-50">
-      <div className="border-b border-slate-200 bg-white">
-        <div className="container-shell flex flex-wrap items-center justify-between gap-4 py-5">
-          <div>
-            <p className="font-black text-[var(--brand-deep-blue)]">IAMimpact Admin</p>
-            <p className="mt-1 text-xs text-slate-500">{staff.email} · {ROLE_LABELS[staff.role]}</p>
-          </div>
-          <SignOutButton />
-        </div>
-        <nav aria-label="Admin navigation" className="container-shell flex gap-2 overflow-x-auto pb-4">
-          <Link className="admin-nav-link" href="/admin">Overview</Link>
-          <Link className="admin-nav-link" href="/admin/registrations">Registrations</Link>
-          {can(staff.role, "checkIn") ? <Link className="admin-nav-link" href="/admin/check-in">Check in</Link> : null}
-          {can(staff.role, "manageStaff") ? <Link className="admin-nav-link" href="/admin/staff">Staff</Link> : null}
-          {can(staff.role, "viewAudit") ? <Link className="admin-nav-link" href="/admin/audit">Audit log</Link> : null}
-        </nav>
-      </div>
+    <AdminShell
+      email={staff.email}
+      roleLabel={ROLE_LABELS[staff.role]}
+      navigation={navigation}
+    >
       {children}
-    </main>
+    </AdminShell>
   );
 }
