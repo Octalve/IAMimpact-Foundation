@@ -23,21 +23,25 @@ export function AdminShell({
   const closeMobileNav = useCallback(() => setMobileOpen(false), []);
 
   return (
-    <main id="main-content" className="min-h-screen bg-[#f5f7fb]">
-      <div className="fixed inset-y-0 left-0 z-40 hidden lg:block">
-        <AdminSidebar
-          email={email}
-          roleLabel={roleLabel}
-          navigation={navigation}
-        />
-      </div>
+    <main id="main-content" className="min-h-[calc(100vh-5rem)] bg-[#f5f7fb]">
+      <div className="grid min-h-[calc(100vh-5rem)] lg:grid-cols-[19rem_minmax(0,1fr)]">
+        <div className="relative hidden bg-[#0a1830] lg:block">
+          <div className="sticky top-20 h-[calc(100vh-5rem)]">
+            <AdminSidebar
+              email={email}
+              roleLabel={roleLabel}
+              navigation={navigation}
+            />
+          </div>
+        </div>
 
-      <div className="min-h-screen lg:pl-[17.5rem]">
+        <div className="min-w-0">
         <AdminTopbar
           navigation={navigation}
           onOpenNavigation={() => setMobileOpen(true)}
         />
-        <div className="min-w-0">{children}</div>
+          <div className="min-w-0">{children}</div>
+        </div>
       </div>
 
       <AdminMobileNav

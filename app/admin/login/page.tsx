@@ -14,9 +14,12 @@ export default async function AdminLoginPage() {
     <main id="main-content" className="bg-slate-50 px-4 py-20">
       <section className="mx-auto max-w-md rounded-[2rem] bg-white p-8 shadow-xl ring-1 ring-slate-200 sm:p-10">
         <p className="eyebrow">Staff access</p>
-        <h1 className="mt-4 text-3xl font-black text-slate-950">IAMimpact Admin</h1>
+        <h1 className="mt-4 text-3xl font-black text-slate-950">
+          IAMimpact Admin
+        </h1>
         <p className="mt-3 leading-7 text-slate-600">
-          Sign in with an approved Neon Auth staff account. Access is invite-only.
+          Sign in to access the IAMimpact administration portal. Authorised
+          staff only.
         </p>
         <LoginForm />
       </section>
